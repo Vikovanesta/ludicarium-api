@@ -14,6 +14,7 @@ import (
 type Website struct {
 	ID       int             `json:"id"`
 	Category WebsiteCategory `json:"category"`
+	Game     int             `json:"game"`
 	Trusted  bool            `json:"trusted"`
 	URL      string          `json:"url"`
 }

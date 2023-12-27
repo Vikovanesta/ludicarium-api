@@ -15,9 +15,12 @@ import (
 type ExternalGame struct {
 	ID        int                  `json:"id"`
 	Category  ExternalGameCategory `json:"category"`
+	Countries []int                `json:"countries"`
 	CreatedAt int                  `json:"created_at"`
 	Game      int                  `json:"game"`
+	Media     ExternalGameMedia    `json:"media"`
 	Name      string               `json:"name"`
+	Platform  int                  `json:"platform"`
 	UID       string               `json:"uid"`
 	UpdatedAt int                  `json:"updated_at"`
 	Url       string               `json:"url"`
@@ -27,7 +30,7 @@ type ExternalGame struct {
 // ExternalGameCategory speficies an external game, platform, or media service.
 type ExternalGameCategory int
 
-//go:generate stringer -type=ExternalGameCategory
+//go:generate stringer -type=ExternalGameCategory,ExternalGameMedia
 
 // Expected ExternalGameCategory enums from the IGDB.
 const (
@@ -46,6 +49,53 @@ const (
 	ExternalApple
 	ExternalTwitch
 	ExternalAndroid
+	_
+	_
+	_
+	_
+	ExternalAmazonAsin
+	_
+	ExternalAmazonLuna
+	ExternalAmazonAdg
+	_
+	_
+	ExternalEpicGameStore
+	_
+	ExternalOculus
+	ExternalUtomik
+	ExternalItchIo
+	ExternalXboxMarketplace
+	ExternalKartridge
+	_
+	_
+	_
+	ExternalPlaystationStoreUs
+	ExternalFocusEntertainment
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	_
+	ExternalXboxGamePassUltimateCloud
+	ExternalGamejolt
+)
+
+type ExternalGameMedia int
+
+const (
+	ExternalDigital ExternalGameMedia = iota + 1
+	ExternalPhysical
 )
 
 // ExternalGameService handles all the API calls for the IGDB ExternalGame endpoint.

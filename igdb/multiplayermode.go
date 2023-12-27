@@ -14,6 +14,7 @@ import (
 type MultiplayerMode struct {
 	Campaigncoop      bool `json:"campaigncoop"`
 	Dropin            bool `json:"dropin"`
+	Game              int  `json:"game"`
 	Lancoop           bool `json:"lancoop"`
 	Offlinecoop       bool `json:"offlinecoop"`
 	Offlinecoopmax    int  `json:"offlinecoopmax"`

@@ -22,6 +22,7 @@ type ReleaseDate struct {
 	M         int            `json:"m"`
 	Platform  int            `json:"platform"`
 	Region    RegionCategory `json:"region"`
+	Status    int            `json:"status"`
 	UpdatedAt int            `json:"updated_at"`
 	Y         int            `json:"y"`
 }
@@ -56,6 +57,8 @@ const (
 	RegionChina
 	RegionAsia
 	RegionWorldwide
+	RegionKorea
+	RegionBrazil
 )
 
 // ReleaseDateService handles all the API calls for the IGDB ReleaseDate endpoint.

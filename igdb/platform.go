@@ -20,8 +20,8 @@ type Platform struct {
 	CreatedAt       int              `json:"created_at"`
 	Generation      int              `json:"generation"`
 	Name            string           `json:"name"`
-	PlatformLogo    int              `json:"platform_logo"`
 	ProductFamily   int              `json:"product_family"`
+	PlatformLogo    int              `json:"platform_logo"`
 	Slug            string           `json:"slug"`
 	Summary         string           `json:"summary"`
 	UpdatedAt       int              `json:"updated_at"`

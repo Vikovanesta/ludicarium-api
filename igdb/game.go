@@ -21,6 +21,7 @@ type Game struct {
 	Bundles               []int        `json:"bundles"`
 	Category              GameCategory `json:"category"`
 	Collection            int          `json:"collection"`
+	Collections           []int        `json:"collections"`
 	Cover                 int          `json:"cover"`
 	CreatedAt             int          `json:"created_at"`
 	DLCS                  []int        `json:"dlcs"`
@@ -28,22 +29,28 @@ type Game struct {
 	ExternalGames         []int        `json:"external_games"`
 	FirstReleaseDate      int          `json:"first_release_date"`
 	Follows               int          `json:"follows"`
+	Forks                 []int        `json:"forks"`
 	Franchise             int          `json:"franchise"`
 	Franchises            []int        `json:"franchises"`
 	GameEngines           []int        `json:"game_engines"`
+	GameLocalizations     []int        `json:"game_localizations"`
 	GameModes             []int        `json:"game_modes"`
 	Genres                []int        `json:"genres"`
 	Hypes                 int          `json:"hypes"`
 	InvolvedCompanies     []int        `json:"involved_companies"`
 	Keywords              []int        `json:"keywords"`
+	LanguangeSupports     []int        `json:"language_supports"`
 	MultiplayerModes      []int        `json:"multiplayer_modes"`
 	Name                  string       `json:"name"`
 	ParentGame            int          `json:"parent_game"`
 	Platforms             []int        `json:"platforms"`
 	PlayerPerspectives    []int        `json:"player_perspectives"`
+	Ports                 []int        `json:"ports"`
 	Rating                float64      `json:"rating"`
 	RatingCount           int          `json:"rating_count"`
 	ReleaseDates          []int        `json:"release_dates"`
+	Remakes               []int        `json:"remakes"`
+	Remasters             []int        `json:"remasters"`
 	Screenshots           []int        `json:"screenshots"`
 	SimilarGames          []int        `json:"similar_games"`
 	Slug                  string       `json:"slug"`
@@ -78,6 +85,13 @@ const (
 	Mod
 	Episode
 	Season
+	Remake
+	Remaster
+	ExpandedGame
+	Port
+	Fork
+	Pack
+	Update
 )
 
 // GameStatus specifies the release status of a specific game.
@@ -92,6 +106,8 @@ const (
 	StatusEarlyAccess
 	StatusOffline
 	StatusCancelled
+	StatusRumored
+	StatusDelisted
 )
 
 // GameService handles all the API

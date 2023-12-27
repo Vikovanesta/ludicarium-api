@@ -12,12 +12,16 @@ import (
 // Collection represents a video game series.
 // For more information visit: https://api-docs.igdb.com/#collection
 type Collection struct {
-	ID        int    `json:"id"`
-	CreatedAt int    `json:"created_at"`
-	Name      string `json:"name"`
-	Slug      string `json:"slug"`
-	UpdatedAt int    `json:"updated_at"`
-	URL       string `json:"url"`
+	ID                int    `json:"id"`
+	AsChildRelations  []int  `json:"as_child_relations"`
+	AsParentRelations []int  `json:"as_parent_relations"`
+	CreatedAt         int    `json:"created_at"`
+	Games             []int  `json:"games"`
+	Name              string `json:"name"`
+	Slug              string `json:"slug"`
+	Type              int    `json:"type"`
+	UpdatedAt         int    `json:"updated_at"`
+	URL               string `json:"url"`
 }
 
 // CollectionService handles all the API calls for the IGDB Collection endpoint.

@@ -14,6 +14,7 @@ import (
 type Franchise struct {
 	ID        int    `json:"id"`
 	CreatedAt int    `json:"created_at"`
+	Games     []int  `json:"games"`
 	Name      string `json:"name"`
 	Slug      string `json:"slug"`
 	UpdatedAt int    `json:"updated_at"`

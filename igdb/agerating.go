@@ -29,6 +29,11 @@ type AgeRatingCategory int
 const (
 	AgeRatingESRB AgeRatingCategory = iota + 1
 	AgeRatingPEGI
+	AgeRatingCERO
+	AgeRatingUSK
+	AgeRatingGRAC
+	AgeRatingCLASS_IND
+	AgeRatingACB
 )
 
 // AgeRatingEnum specifies a specific age rating.
@@ -48,6 +53,33 @@ const (
 	AgeRatingT
 	AgeRatingM
 	AgeRatingAO
+	AgeRatingCERO_A
+	AgeRatingCERO_B
+	AgeRatingCERO_C
+	AgeRatingCERO_D
+	AgeRatingCERO_Z
+	AgeRatingUSK_0
+	AgeRatingUSK_6
+	AgeRatingUSK_12
+	AgeRatingUSK_16
+	AgeRatingUSK_18
+	AgeRatingGRAC_ALL
+	AgeRatingGRAC_Twelve
+	AgeRatingGRAC_Fifteen
+	AgeRatingGRAC_Eighteen
+	AgeRatingGRAC_TESTING
+	AgeRatingCLASS_IND_L
+	AgeRatingCLASS_IND_Ten
+	AgeRatingCLASS_IND_Twelve
+	AgeRatingCLASS_IND_Fourteen
+	AgeRatingCLASS_IND_Sixteen
+	AgeRatingCLASS_IND_Eighteen
+	AgeRatingACB_G
+	AgeRatingACB_PG
+	AgeRatingACB_M
+	AgeRatingACB_MA15
+	AgeRatingACB_R18
+	AgeRatingAC_RC
 )
 
 // AgeRatingService handles all the API calls for the IGDB AgeRating endpoint.

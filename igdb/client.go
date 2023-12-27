@@ -29,15 +29,24 @@ type Client struct {
 	Characters                  *CharacterService
 	CharacterMugshots           *CharacterMugshotService
 	Collections                 *CollectionService
+	CollectionMemberships       *CollectionMembershipService
+	CollectionMembershipTypes   *CollectionMembershipTypeService
+	CollectionRelations         *CollectionRelationService
+	CollectionRelationTypes     *CollectionRelationTypeService
+	CollectionTypes             *CollectionTypeService
 	Companies                   *CompanyService
 	CompanyLogos                *CompanyLogoService
 	CompanyWebsites             *CompanyWebsiteService
 	Covers                      *CoverService
+	Events                      *EventService
+	EventLogos                  *EventLogoService
+	EventNetworks               *EventNetworkService
 	ExternalGames               *ExternalGameService
 	Franchises                  *FranchiseService
 	Games                       *GameService
 	GameEngines                 *GameEngineService
 	GameEngineLogos             *GameEngineLogoService
+	GameLocalizations           *GameLocalizationService
 	GameModes                   *GameModeService
 	GameVersions                *GameVersionService
 	GameVersionFeatures         *GameVersionFeatureService
@@ -46,16 +55,22 @@ type Client struct {
 	Genres                      *GenreService
 	InvolvedCompanies           *InvolvedCompanyService
 	Keywords                    *KeywordService
+	Languages                   *LanguageService
+	LanguageSupports            *LanguageSupportService
+	LanguageSupportTypes        *LanguageSupportTypeService
 	MultiplayerModes            *MultiplayerModeService
+	NetworkTypes                *NetworkTypeService
 	Platforms                   *PlatformService
+	PlatformFamilies            *PlatformFamilyService
 	PlatformLogos               *PlatformLogoService
 	PlatformVersions            *PlatformVersionService
 	PlatformVersionCompanies    *PlatformVersionCompanyService
 	PlatformVersionReleaseDates *PlatformVersionReleaseDateService
 	PlatformWebsites            *PlatformWebsiteService
 	PlayerPerspectives          *PlayerPerspectiveService
-	PlatformFamilies            *PlatformFamilyService
+	Regions                     *RegionService
 	ReleaseDates                *ReleaseDateService
+	ReleaseDateStatuses         *ReleaseDateStatusService
 	Screenshots                 *ScreenshotService
 	Themes                      *ThemeService
 	Websites                    *WebsiteService
@@ -80,15 +95,24 @@ func NewClient(clientID string, appAccessToken string, custom *http.Client) *Cli
 	c.Characters = &CharacterService{client: c, end: EndpointCharacter}
 	c.CharacterMugshots = &CharacterMugshotService{client: c, end: EndpointCharacterMugshot}
 	c.Collections = &CollectionService{client: c, end: EndpointCollection}
+	c.CollectionMemberships = &CollectionMembershipService{client: c, end: EndpointCollectionMembership}
+	c.CollectionMembershipTypes = &CollectionMembershipTypeService{client: c, end: EndpointCollectionMembershipType}
+	c.CollectionRelations = &CollectionRelationService{client: c, end: EndpointCollectionRelation}
+	c.CollectionRelationTypes = &CollectionRelationTypeService{client: c, end: EndpointCollectionRelationType}
+	c.CollectionTypes = &CollectionTypeService{client: c, end: EndpointCollectionType}
 	c.Companies = &CompanyService{client: c, end: EndpointCompany}
 	c.CompanyLogos = &CompanyLogoService{client: c, end: EndpointCompanyLogo}
 	c.CompanyWebsites = &CompanyWebsiteService{client: c, end: EndpointCompanyWebsite}
 	c.Covers = &CoverService{client: c, end: EndpointCover}
+	c.Events = &EventService{client: c, end: EndpointEvent}
+	c.EventLogos = &EventLogoService{client: c, end: EndpointEventLogo}
+	c.EventNetworks = &EventNetworkService{client: c, end: EndpointEventNetwork}
 	c.ExternalGames = &ExternalGameService{client: c, end: EndpointExternalGame}
 	c.Franchises = &FranchiseService{client: c, end: EndpointFranchise}
 	c.Games = &GameService{client: c, end: EndpointGame}
 	c.GameEngines = &GameEngineService{client: c, end: EndpointGameEngine}
 	c.GameEngineLogos = &GameEngineLogoService{client: c, end: EndpointGameEngineLogo}
+	c.GameLocalizations = &GameLocalizationService{client: c, end: EndpointGameLocalization}
 	c.GameModes = &GameModeService{client: c, end: EndpointGameMode}
 	c.GameVersions = &GameVersionService{client: c, end: EndpointGameVersion}
 	c.GameVersionFeatures = &GameVersionFeatureService{client: c, end: EndpointGameVersionFeature}
@@ -97,16 +121,22 @@ func NewClient(clientID string, appAccessToken string, custom *http.Client) *Cli
 	c.Genres = &GenreService{client: c, end: EndpointGenre}
 	c.InvolvedCompanies = &InvolvedCompanyService{client: c, end: EndpointInvolvedCompany}
 	c.Keywords = &KeywordService{client: c, end: EndpointKeyword}
+	c.Languages = &LanguageService{client: c, end: EndpointLanguage}
+	c.LanguageSupports = &LanguageSupportService{client: c, end: EndpointLanguageSupport}
+	c.LanguageSupportTypes = &LanguageSupportTypeService{client: c, end: EndpointLanguageSupportType}
 	c.MultiplayerModes = &MultiplayerModeService{client: c, end: EndpointMultiplayerMode}
+	c.NetworkTypes = &NetworkTypeService{client: c, end: EndpointNetworkType}
 	c.Platforms = &PlatformService{client: c, end: EndpointPlatform}
+	c.PlatformFamilies = &PlatformFamilyService{client: c, end: EndpointPlatformFamily}
 	c.PlatformLogos = &PlatformLogoService{client: c, end: EndpointPlatformLogo}
 	c.PlatformVersions = &PlatformVersionService{client: c, end: EndpointPlatformVersion}
 	c.PlatformVersionCompanies = &PlatformVersionCompanyService{client: c, end: EndpointPlatformVersionCompany}
 	c.PlatformVersionReleaseDates = &PlatformVersionReleaseDateService{client: c, end: EndpointPlatformVersionReleaseDate}
 	c.PlatformWebsites = &PlatformWebsiteService{client: c, end: EndpointPlatformWebsite}
 	c.PlayerPerspectives = &PlayerPerspectiveService{client: c, end: EndpointPlayerPerspective}
-	c.PlatformFamilies = &PlatformFamilyService{client: c, end: EndpointPlatformFamily}
+	c.Regions = &RegionService{client: c, end: EndpointRegion}
 	c.ReleaseDates = &ReleaseDateService{client: c, end: EndpointReleaseDate}
+	c.ReleaseDateStatuses = &ReleaseDateStatusService{client: c, end: EndpointReleaseDateStatus}
 	c.Screenshots = &ScreenshotService{client: c, end: EndpointScreenshot}
 	c.Themes = &ThemeService{client: c, end: EndpointTheme}
 	c.Websites = &WebsiteService{client: c, end: EndpointWebsite}
