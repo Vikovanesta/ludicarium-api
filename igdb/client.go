@@ -4,12 +4,15 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/Henry-Sarabia/apicalypse"
 	"github.com/pkg/errors"
+	"github.com/vikovanesta/ludicarium-api/config"
 )
 
 const igdbURL string = "https://api.igdb.com/v4/"
+const twitchAuthURL string = "https://id.twitch.tv/oauth2/token"
 
 type service struct {
 	client *Client
@@ -17,10 +20,12 @@ type service struct {
 }
 
 type Client struct {
-	http     *http.Client
-	rootURL  string
-	clientID string
-	token    string
+	http                *http.Client
+	rootURL             string
+	authURL             string
+	clientID            string
+	token               string
+	tokenExpirationTime time.Time
 
 	AgeRatings                  *AgeRatingService
 	AgeRatingContents           *AgeRatingContentService
@@ -76,17 +81,28 @@ type Client struct {
 	Websites                    *WebsiteService
 }
 
-func NewClient(clientID string, appAccessToken string, custom *http.Client) *Client {
+// TwitchAuthResponse is the response from the Twitch API when authenticating.
+type authResponse struct {
+	AccessToken string `json:"access_token"`
+	ExpiresIn   int    `json:"expires_in"`
+	TokenType   string `json:"token_type"`
+}
+
+func NewClient(custom *http.Client) *Client {
 	if custom == nil {
 		custom = http.DefaultClient
 	}
 
+	config := config.EnvConfig()
+
 	c := &Client{
 		http:     custom,
 		rootURL:  igdbURL,
-		clientID: clientID,
-		token:    appAccessToken,
+		authURL:  twitchAuthURL,
+		clientID: config.ClientID,
 	}
+
+	c.authenticate(c.clientID, config.ClientSecret)
 
 	c.AgeRatings = &AgeRatingService{client: c, end: EndpointAgeRating}
 	c.AgeRatingContents = &AgeRatingContentService{client: c, end: EndpointAgeRatingContent}
@@ -147,6 +163,12 @@ func NewClient(clientID string, appAccessToken string, custom *http.Client) *Cli
 // Request configures a new request for the provided URL and
 // adds the necessary headers to communicate with the IGDB.
 func (c *Client) request(end endpoint, opts ...Option) (*http.Request, error) {
+	if c.tokenExpirationTime.Before(time.Now()) {
+		if err := c.authenticate(c.clientID, config.EnvConfig().ClientSecret); err != nil {
+			return nil, errors.Wrap(err, "authentication failed")
+		}
+	}
+
 	unwrapped, err := unwrapOptions(opts...)
 	if err != nil {
 		return nil, errors.Wrap(err, "cannot create request with invalid options")
@@ -207,6 +229,52 @@ func (c *Client) post(end endpoint, result interface{}, opts ...Option) error {
 	if err != nil {
 		return errors.Wrap(err, "cannot make POST request")
 	}
+
+	return nil
+}
+
+func (c *Client) authenticate(clientId string, secret string) error {
+	req, err := http.NewRequest("POST", c.authURL, nil)
+	if err != nil {
+		return errors.Wrap(err, "cannot make authenticate for twitch")
+	}
+
+	req.Header.Add("Accept", "application/json")
+
+	q := req.URL.Query()
+	q.Add("client_id", clientId)
+	q.Add("client_secret", secret)
+	q.Add("grant_type", "client_credentials")
+	req.URL.RawQuery = q.Encode()
+
+	resp, err := c.http.Do(req)
+	if err != nil {
+		return errors.Wrap(err, "http client cannot send authentication request")
+	}
+	defer resp.Body.Close()
+
+	if err = checkResponse(resp); err != nil {
+		return err
+	}
+
+	b, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return errors.Wrap(err, "cannot read authentication response body")
+	}
+
+	if isBracketPair(b) {
+		return ErrNoResults
+	}
+
+	var result *authResponse
+	err = json.Unmarshal(b, &result)
+	if err != nil {
+		return errors.Wrap(errInvalidJSON, err.Error())
+	}
+
+	c.token = result.AccessToken
+	c.tokenExpirationTime = time.Now().Add(time.Duration(result.ExpiresIn) * time.Second)
+	c.tokenExpirationTime = c.tokenExpirationTime.Add(-time.Minute)
 
 	return nil
 }

@@ -7,11 +7,13 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/vikovanesta/ludicarium-api/igdb"
 )
 
 type Server struct {
-	server *http.Server
-	router *mux.Router
+	server     *http.Server
+	router     *mux.Router
+	igdbClient *igdb.Client
 }
 
 func NewServer() *Server {
@@ -24,6 +26,9 @@ func NewServer() *Server {
 		router: mux.NewRouter().StrictSlash(true),
 	}
 
+	s.routes()
+
+	s.igdbClient = igdb.NewClient(nil)
 	s.server.Handler = s.router
 
 	return &s
