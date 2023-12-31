@@ -6,7 +6,9 @@ import (
 	"time"
 
 	"github.com/vikovanesta/ludicarium-api/config"
+	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -28,33 +30,98 @@ func NewDB() (*DB, error) {
 	)
 
 	config := config.EnvConfig()
-
+	driver := config.DBDriver
 	uri := config.DBUri
-	db, err := gorm.Open(postgres.Open(uri), &gorm.Config{
-		Logger: newLogger,
-	})
 
-	if err != nil {
-		log.Println("Failed to connect to the database:", err)
-		return nil, err
+	if driver == "sqlite" {
+		db, err := gorm.Open(sqlite.Open(uri), &gorm.Config{
+			Logger: newLogger,
+		})
+
+		if err != nil {
+			log.Println("Failed to connect to the database:", err)
+			return nil, err
+		}
+
+		sqliteDB, err := db.DB()
+		if err != nil {
+			log.Println("Error getting *sql.DB instance:", err)
+			return nil, err
+		}
+
+		// Ping the database
+		err = sqliteDB.Ping()
+		if err != nil {
+			log.Println("Error pinging database:", err)
+			return nil, err
+		}
+
+		sqliteDB.SetMaxIdleConns(10)
+		sqliteDB.SetMaxOpenConns(100)
+		sqliteDB.SetConnMaxLifetime(time.Hour)
+
+		return &DB{db}, nil
 	}
 
-	pgsqlDB, err := db.DB()
-	if err != nil {
-		log.Println("Error getting *sql.DB instance:", err)
-		return nil, err
+	if driver == "postgres" {
+		db, err := gorm.Open(postgres.Open(uri), &gorm.Config{
+			Logger: newLogger,
+		})
+
+		if err != nil {
+			log.Println("Failed to connect to the database:", err)
+			return nil, err
+		}
+
+		pgsqlDB, err := db.DB()
+		if err != nil {
+			log.Println("Error getting *sql.DB instance:", err)
+			return nil, err
+		}
+
+		// Ping the database
+		err = pgsqlDB.Ping()
+		if err != nil {
+			log.Println("Error pinging database:", err)
+			return nil, err
+		}
+
+		pgsqlDB.SetMaxIdleConns(10)
+		pgsqlDB.SetMaxOpenConns(100)
+		pgsqlDB.SetConnMaxLifetime(time.Hour)
+
+		return &DB{db}, nil
 	}
 
-	// Ping the database
-	err = pgsqlDB.Ping()
-	if err != nil {
-		log.Println("Error pinging database:", err)
-		return nil, err
+	if driver == "mysql" {
+		db, err := gorm.Open(mysql.Open(uri), &gorm.Config{
+			Logger: newLogger,
+		})
+
+		if err != nil {
+			log.Println("Failed to connect to the database:", err)
+			return nil, err
+		}
+
+		mysqlDB, err := db.DB()
+		if err != nil {
+			log.Println("Error getting *sql.DB instance:", err)
+			return nil, err
+		}
+
+		// Ping the database
+		err = mysqlDB.Ping()
+		if err != nil {
+			log.Println("Error pinging database:", err)
+			return nil, err
+		}
+
+		mysqlDB.SetMaxIdleConns(10)
+		mysqlDB.SetMaxOpenConns(100)
+		mysqlDB.SetConnMaxLifetime(time.Hour)
+
+		return &DB{db}, nil
 	}
 
-	pgsqlDB.SetMaxIdleConns(10)
-	pgsqlDB.SetMaxOpenConns(100)
-	pgsqlDB.SetConnMaxLifetime(time.Hour)
-
-	return &DB{db}, nil
+	return nil, nil
 }

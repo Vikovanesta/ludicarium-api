@@ -8,6 +8,7 @@ import (
 
 type Config struct {
 	Port         string
+	DBDriver     string
 	DBUri        string
 	ClientID     string
 	ClientSecret string
@@ -20,10 +21,16 @@ func EnvConfig() Config {
 		port = "3000"
 	}
 
-	dbURI, ok := os.LookupEnv("POSTGRESQL_URL")
+	dbDriver, ok := os.LookupEnv("DB_DRIVER")
 
 	if !ok {
-		panic("POSTGRESQL_URL is not set")
+		panic("DB_DRIVER is not set")
+	}
+
+	dbURI, ok := os.LookupEnv("DB_URI")
+
+	if !ok {
+		panic("DB_URI is not set")
 	}
 
 	clientID, ok := os.LookupEnv("IGDB_CLIENT_ID")
@@ -38,5 +45,5 @@ func EnvConfig() Config {
 		panic("IGDB_CLIENT_SECRET is not set")
 	}
 
-	return Config{port, dbURI, clientID, clientSecret}
+	return Config{port, dbDriver, dbURI, clientID, clientSecret}
 }
