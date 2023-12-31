@@ -13,6 +13,7 @@ import (
 // such as "World War 2" or "Steampunk".
 // For more information visit: https://api-docs.igdb.com/#keyword
 type Keyword struct {
+	ID        int    `json:"id"`
 	CreatedAt int    `json:"created_at"`
 	Name      string `json:"name"`
 	Slug      string `json:"slug"`
