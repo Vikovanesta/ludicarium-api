@@ -1,12 +1,10 @@
 package db
 
-import "gorm.io/gorm"
-
 type EventNetwork struct {
-	gorm.Model
-	EventID       uint
-	Event         Event `gorm:"foreignKey:EventID"`
-	NetworkTypeID uint
-	NetworkType   EventNetworkType `gorm:"foreignKey:NetworkTypeID"`
-	URL           string
+	Model
+	EventID       uint             `gorm:"not null" json:"-"`
+	Event         Event            `gorm:"foreignKey:EventID" json:"event"`
+	NetworkTypeID uint             `gorm:"not null" json:"-"`
+	NetworkType   EventNetworkType `gorm:"foreignKey:NetworkTypeID" json:"network_type"`
+	URL           string           `json:"url"`
 }

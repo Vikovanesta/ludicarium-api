@@ -1,70 +1,82 @@
 package ludicarium
 
 import (
+	"errors"
+	"time"
+
+	"github.com/vikovanesta/ludicarium-api/db"
 	"github.com/vikovanesta/ludicarium-api/igdb"
 )
 
-type Game struct {
-	ID                    int               `json:"id"`
-	AgeRatings            []int             `json:"age_ratings"`
-	AggregatedRating      float64           `json:"aggregated_rating"`
-	AggregatedRatingCount int               `json:"aggregated_rating_count"`
-	AlternativeNames      []int             `json:"alternative_names"`
-	Artworks              []int             `json:"artworks"`
-	Bundles               []int             `json:"bundles"`
-	Category              igdb.GameCategory `json:"category"`
-	Collection            int               `json:"collection"`
-	Collections           []int             `json:"collections"`
-	Cover                 int               `json:"cover"`
-	CreatedAt             int               `json:"created_at"`
-	DLCS                  []int             `json:"dlcs"`
-	Expansions            []int             `json:"expansions"`
-	ExternalGames         []int             `json:"external_games"`
-	FirstReleaseDate      int               `json:"first_release_date"`
-	Follows               int               `json:"follows"`
-	Forks                 []int             `json:"forks"`
-	Franchise             int               `json:"franchise"`
-	Franchises            []int             `json:"franchises"`
-	GameEngines           []int             `json:"game_engines"`
-	GameLocalizations     []int             `json:"game_localizations"`
-	GameModes             []int             `json:"game_modes"`
-	Genres                []int             `json:"genres"`
-	Hypes                 int               `json:"hypes"`
-	InvolvedCompanies     []int             `json:"involved_companies"`
-	Keywords              []int             `json:"keywords"`
-	LanguangeSupports     []int             `json:"language_supports"`
-	MultiplayerModes      []int             `json:"multiplayer_modes"`
-	Name                  string            `json:"name"`
-	ParentGame            int               `json:"parent_game"`
-	Platforms             []int             `json:"platforms"`
-	PlayerPerspectives    []int             `json:"player_perspectives"`
-	Ports                 []int             `json:"ports"`
-	Rating                float64           `json:"rating"`
-	RatingCount           int               `json:"rating_count"`
-	ReleaseDates          []int             `json:"release_dates"`
-	Remakes               []int             `json:"remakes"`
-	Remasters             []int             `json:"remasters"`
-	Screenshots           []int             `json:"screenshots"`
-	SimilarGames          []int             `json:"similar_games"`
-	Slug                  string            `json:"slug"`
-	StandaloneExpansions  []int             `json:"standalone_expansions"`
-	Status                igdb.GameStatus   `json:"status"`
-	Storyline             string            `json:"storyline"`
-	Summary               string            `json:"summary"`
-	Tags                  []igdb.Tag        `json:"tags"`
-	Themes                []int             `json:"themes"`
-	TotalRating           float64           `json:"total_rating"`
-	TotalRatingCount      int               `json:"total_rating_count"`
-	UpdatedAt             int               `json:"updated_at"`
-	URL                   string            `json:"url"`
-	VersionParent         int               `json:"version_parent"`
-	VersionTitle          string            `json:"version_title"`
-	Videos                []int             `json:"videos"`
-	Websites              []int             `json:"websites"`
+type GameService struct {
+	db   *db.DB
+	igdb *igdb.Client
 }
 
-type GameService interface {
-	Get(id int) (*Game, error)
-	List(ids []int) ([]*Game, error)
-	Index() ([]*Game, error)
+func NewGameService(db *db.DB, igdb *igdb.Client) *GameService {
+	return &GameService{
+		db:   db,
+		igdb: igdb,
+	}
+}
+
+func (gs *GameService) List() ([]*igdb.Game, error) {
+	var igdbGames []*igdb.Game
+	var err error
+
+	igdbGames, err = gs.igdb.Games.Index(igdb.SetLimit(15), igdb.SetFields("*"))
+	if err != nil {
+		return nil, err
+	}
+
+	return igdbGames, nil
+}
+
+func (gs *GameService) Create(game interface{}) (*db.Game, error) {
+	switch g := game.(type) {
+	case *db.Game:
+		result := gs.db.Where(db.Game{Name: g.Name}).Assign(g).FirstOrCreate(g)
+		if result.Error != nil {
+			return nil, result.Error
+		}
+		return g, nil
+	case *igdb.Game:
+		dbGame := igdbGameToLudicariumGame(g)
+		result := gs.db.Where(db.Game{Name: dbGame.Name}).Assign(dbGame).FirstOrCreate(dbGame)
+		if result.Error != nil {
+			return nil, result.Error
+		}
+		return dbGame, nil
+	default:
+		return nil, errors.New("unsupported game type")
+	}
+}
+
+func igdbGameToLudicariumGame(g *igdb.Game) *db.Game {
+	return &db.Game{
+		Model: db.Model{
+			ID:        uint(g.ID),
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		},
+		Name:                  g.Name,
+		Slug:                  g.Slug,
+		CategoryID:            uint(g.Category),
+		FirstReleaseDate:      time.Unix(int64(g.FirstReleaseDate), 0),
+		ParentGameID:          uint(g.ParentGame),
+		StatusID:              uint(g.Status),
+		Storyline:             g.Storyline,
+		Summary:               g.Summary,
+		AggregatedRating:      g.AggregatedRating,
+		AggregatedRatingCount: g.AggregatedRatingCount,
+		Rating:                g.Rating,
+		RatingCount:           g.RatingCount,
+		TotalRating:           g.TotalRating,
+		TotalRatingCount:      g.TotalRatingCount,
+		Follows:               g.Follows,
+		Hypes:                 g.Hypes,
+		VersionParentID:       uint(g.VersionParent),
+		VersionTitle:          g.VersionTitle,
+		CoverID:               uint(g.Cover),
+	}
 }

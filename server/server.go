@@ -7,16 +7,18 @@ import (
 	"time"
 
 	"github.com/gorilla/mux"
+	"github.com/vikovanesta/ludicarium-api/db"
 	"github.com/vikovanesta/ludicarium-api/igdb"
+	"github.com/vikovanesta/ludicarium-api/ludicarium"
 )
 
 type Server struct {
-	server     *http.Server
-	router     *mux.Router
-	igdbClient *igdb.Client
+	server      *http.Server
+	router      *mux.Router
+	gameService *ludicarium.GameService
 }
 
-func NewServer() *Server {
+func NewServer(db *db.DB, igdbClient *igdb.Client) *Server {
 	s := Server{
 		server: &http.Server{
 			ReadTimeout:  10 * time.Second,
@@ -28,7 +30,7 @@ func NewServer() *Server {
 
 	s.routes()
 
-	s.igdbClient = igdb.NewClient(nil)
+	s.gameService = ludicarium.NewGameService(db, igdbClient)
 	s.server.Handler = s.router
 
 	return &s

@@ -1,13 +1,11 @@
 package db
 
-import "gorm.io/gorm"
-
 type PlatformWebsite struct {
-	gorm.Model
-	CategoryID uint
-	Category   WebsiteCategory `gorm:"foreignKey:CategoryID"`
-	PlatformID uint
-	Platform   Platform `gorm:"foreignKey:PlatformID"`
-	Trusted    bool
-	URL        string
+	Model
+	CategoryID uint            `json:"-"`
+	Category   WebsiteCategory `gorm:"foreignKey:CategoryID" json:"category"`
+	PlatformID uint            `json:"-"`
+	Platform   Platform        `gorm:"foreignKey:PlatformID" json:"platform"`
+	Trusted    bool            `json:"trusted"`
+	URL        string          `json:"url"`
 }

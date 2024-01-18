@@ -1,8 +1,6 @@
 package db
 
-import "gorm.io/gorm"
-
 type PlatformLogo struct {
-	gorm.Model
+	Model
 	Image Image `gorm:"embedded"`
 }

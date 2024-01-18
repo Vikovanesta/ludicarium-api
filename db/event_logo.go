@@ -1,8 +1,6 @@
 package db
 
-import "gorm.io/gorm"
-
 type EventLogo struct {
+	Model
 	Image Image `gorm:"embedded"`
-	gorm.Model
 }

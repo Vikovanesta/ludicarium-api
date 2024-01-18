@@ -1,9 +1,7 @@
 package db
 
-import "gorm.io/gorm"
-
 type ReleaseDateStatus struct {
-	gorm.Model
-	Name        string
-	Description string
+	Model
+	Name        string `gorm:"unique;not null" json:"name"`
+	Description string `json:"description"`
 }

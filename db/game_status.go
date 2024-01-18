@@ -1,8 +1,6 @@
 package db
 
-import "gorm.io/gorm"
-
 type GameStatus struct {
-	gorm.Model
-	Name string `gorm:"unique"`
+	Model
+	Name string `gorm:"unique;not null" json:"name"`
 }

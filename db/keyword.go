@@ -1,9 +1,7 @@
 package db
 
-import "gorm.io/gorm"
-
 type Keyword struct {
-	gorm.Model
-	Name string
-	Slug string
+	Model
+	Name string `gorm:"unique;not null" json:"name"`
+	Slug string `gorm:"unique;not null" json:"slug"`
 }

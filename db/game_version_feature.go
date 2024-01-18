@@ -1,13 +1,11 @@
 package db
 
-import "gorm.io/gorm"
-
 type GameVersionFeature struct {
-	gorm.Model
-	Title       string
-	Description string
-	CategoryID  uint
-	Category    GameVersionFeatureCategory `gorm:"foreignKey:CategoryID"`
-	Position    int
-	Values      []GameVersionFeatureValue `gorm:"foreignKey:GameFeatureID"`
+	Model
+	Title       string                     `gorm:"not null" json:"title"`
+	Description string                     `json:"description"`
+	CategoryID  uint                       `json:"-"`
+	Category    GameVersionFeatureCategory `gorm:"foreignKey:CategoryID" json:"category"`
+	Position    int                        `json:"position"`
+	Values      []GameVersionFeatureValue  `gorm:"foreignKey:GameFeatureID" json:"values"`
 }

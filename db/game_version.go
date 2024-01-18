@@ -1,11 +1,9 @@
 package db
 
-import "gorm.io/gorm"
-
 type GameVersion struct {
-	gorm.Model
-	Features []GameVersionFeature `gorm:"many2many:game_version_feature"`
-	GameID   uint
-	Game     Game   `gorm:"foreignKey:GameID"`
-	Games    []Game `gorm:"many2many:game_version_game"`
+	Model
+	Features []GameVersionFeature `gorm:"many2many:game_version_feature" json:"features"`
+	GameID   uint                 `gorm:"not null" json:"-"`
+	Game     Game                 `gorm:"foreignKey:GameID" json:"game"`
+	Games    []Game               `gorm:"many2many:game_version_game" json:"games"`
 }

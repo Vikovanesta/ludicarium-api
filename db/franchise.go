@@ -1,10 +1,8 @@
 package db
 
-import "gorm.io/gorm"
-
 type Franchise struct {
-	gorm.Model
-	Name           string
-	Slug           string
-	GameFranchises []GameFranchise `gorm:"foreignKey:FranchiseID"`
+	Model
+	Name           string          `gorm:"not null" json:"name"`
+	Slug           string          `gorm:"not null" json:"slug"`
+	GameFranchises []GameFranchise `gorm:"foreignKey:FranchiseID" json:"gameFranchises"`
 }

@@ -1,15 +1,13 @@
 package db
 
-import "gorm.io/gorm"
-
 type PlatformVersionReleaseDate struct {
-	gorm.Model
-	CategoryID        uint
-	Category          DateCategory `gorm:"foreignKey:CategoryID"`
-	Date              int
-	Human             string
-	Month             int
-	Year              int
-	PlatformVersionID uint
-	Region            string
+	Model
+	CategoryID        uint         `json:"-"`
+	Category          DateCategory `gorm:"foreignKey:CategoryID" json:"category"`
+	Date              int          `json:"date"`
+	Human             string       `json:"human"`
+	Month             int          `json:"month"`
+	Year              int          `json:"year"`
+	PlatformVersionID uint         `json:"-"`
+	Region            string       `json:"region"`
 }

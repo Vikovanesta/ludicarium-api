@@ -1,14 +1,12 @@
 package db
 
-import "gorm.io/gorm"
-
 type Series struct {
-	gorm.Model
-	Name         string
-	Slug         string
-	TypeID       uint
-	Type         SeriesType       `gorm:"foreignKey:TypeID"`
-	ChildSeries  []SeriesRelation `gorm:"foreignKey:ParentSeriesID"`
-	ParentSeries []SeriesRelation `gorm:"foreignKey:ChildSeriesID"`
-	Game         []*Game          `gorm:"many2many:game_series;"`
+	Model
+	Name         string           `gorm:"not null" json:"name"`
+	Slug         string           `gorm:"not null" json:"slug"`
+	TypeID       uint             `json:"-"`
+	Type         SeriesType       `gorm:"foreignKey:TypeID" json:"type"`
+	ChildSeries  []SeriesRelation `gorm:"foreignKey:ParentSeriesID" json:"child_series"`
+	ParentSeries []SeriesRelation `gorm:"foreignKey:ChildSeriesID" json:"parent_series"`
+	Game         []*Game          `gorm:"many2many:game_series;" json:"games"`
 }

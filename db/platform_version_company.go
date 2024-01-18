@@ -1,12 +1,10 @@
 package db
 
-import "gorm.io/gorm"
-
 type PlatformVersionCompany struct {
-	gorm.Model
-	Comment      string
-	CompanyID    uint
-	Company      Company `gorm:"foreignKey:CompanyID"`
-	Developer    bool
-	Manufacturer bool
+	Model
+	Comment      string  `json:"comment"`
+	CompanyID    uint    `gorm:"not null" json:"-"`
+	Company      Company `gorm:"foreignKey:CompanyID" json:"company"`
+	Developer    bool    `json:"developer"`
+	Manufacturer bool    `json:"manufacturer"`
 }

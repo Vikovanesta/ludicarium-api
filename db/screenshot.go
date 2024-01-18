@@ -1,9 +1,7 @@
 package db
 
-import "gorm.io/gorm"
-
 type Screenshot struct {
-	gorm.Model
+	Model
 	Image  Image `gorm:"embedded"`
-	GameID uint
+	GameID uint  `json:"-"`
 }

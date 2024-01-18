@@ -1,10 +1,8 @@
 package db
 
-import "gorm.io/gorm"
-
 type AlternativeName struct {
-	gorm.Model
-	Name    string
-	Comment string
-	GameID  uint
+	Model
+	Name    string `gorm:"not null" json:"name"`
+	Comment string `json:"comment"`
+	GameID  uint   `gorm:"not null" json:"-"`
 }

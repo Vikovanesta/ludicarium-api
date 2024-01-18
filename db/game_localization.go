@@ -1,12 +1,11 @@
 package db
 
-import "gorm.io/gorm"
-
 type GameLocalization struct {
-	gorm.Model
-	Cover    Cover
-	GameID   uint
-	Name     string
-	RegionID uint
-	Region   Region `gorm:"foreignKey:RegionID"`
+	Model
+	CoverID  uint   `json:"-"`
+	Cover    Cover  `gorm:"foreignKey:CoverID" json:"cover"`
+	GameID   uint   `gorm:"not null" json:"-"`
+	Name     string `json:"name"`
+	RegionID uint   `json:"-"`
+	Region   Region `gorm:"foreignKey:RegionID" json:"region"`
 }

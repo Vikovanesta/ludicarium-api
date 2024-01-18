@@ -1,12 +1,10 @@
 package db
 
-import "gorm.io/gorm"
-
 type LanguageSupport struct {
-	gorm.Model
-	GameID                uint
-	LanguageID            uint
-	Language              Language `gorm:"foreignKey:LanguageID"`
-	LanguageSupportTypeID uint
-	LanguageSupportType   LanguageSupportType `gorm:"foreignKey:LanguageSupportTypeID"`
+	Model
+	GameID                uint                `gorm:"not null" json:"-"`
+	LanguageID            uint                `gorm:"not null" json:"-"`
+	Language              Language            `gorm:"foreignKey:LanguageID" json:"language"`
+	LanguageSupportTypeID uint                `json:"-"`
+	LanguageSupportType   LanguageSupportType `gorm:"foreignKey:LanguageSupportTypeID" json:"language_support_type"`
 }

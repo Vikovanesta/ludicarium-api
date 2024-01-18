@@ -1,20 +1,18 @@
 package db
 
-import "gorm.io/gorm"
-
 type ExternalGame struct {
-	gorm.Model
-	Name       string
-	UID        string
-	CategoryID uint
-	Category   ExternalGameCategory `gorm:"foreignKey:CategoryID"`
-	CountryIDs []int                `gorm:"type:integer[]"`
-	GameID     int
-	Game       Game `gorm:"foreignKey:GameID"`
-	MediaID    uint
-	Media      ExternalGameMedia `gorm:"foreignKey:MediaID"`
-	PlatformID uint
-	Platform   Platform `gorm:"foreignKey:PlatformID"`
-	Url        string
-	Year       int
+	Model
+	Name       string               `json:"name"`
+	UID        string               `json:"uid"`
+	CategoryID uint                 `json:"-"`
+	Category   ExternalGameCategory `gorm:"foreignKey:CategoryID" json:"category"`
+	CountryIDs []int                `gorm:"type:integer[]" json:"country_ids"`
+	GameID     int                  `json:"-"`
+	Game       Game                 `gorm:"foreignKey:GameID" json:"game"`
+	MediaID    uint                 `json:"-"`
+	Media      ExternalGameMedia    `gorm:"foreignKey:MediaID" json:"media"`
+	PlatformID uint                 `json:"-"`
+	Platform   Platform             `gorm:"foreignKey:PlatformID" json:"platform"`
+	Url        string               `json:"url"`
+	Year       int                  `json:"year"`
 }

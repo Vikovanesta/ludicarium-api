@@ -1,8 +1,6 @@
 package db
 
-import "gorm.io/gorm"
-
 type CharacterMugShot struct {
+	Model
 	Image Image `gorm:"embedded"`
-	gorm.Model
 }

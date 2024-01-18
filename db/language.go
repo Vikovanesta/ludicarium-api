@@ -1,10 +1,8 @@
 package db
 
-import "gorm.io/gorm"
-
 type Language struct {
-	gorm.Model
-	Locale     string
-	Name       string
-	NativeName string
+	Model
+	Name       string `gorm:"not null" json:"name"`
+	Locale     string `json:"locale"`
+	NativeName string `json:"nativeName"`
 }

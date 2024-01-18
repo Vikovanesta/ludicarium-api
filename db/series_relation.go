@@ -1,11 +1,9 @@
 package db
 
-import "gorm.io/gorm"
-
 type SeriesRelation struct {
-	gorm.Model
-	ChildSeriesID  uint
-	ChildSeries    Series `gorm:"foreignKey:ChildSeriesID"`
-	ParentSeriesID uint
-	ParentSeries   Series `gorm:"foreignKey:ParentSeriesID"`
+	Model
+	ChildSeriesID  uint   `gorm:"not null" json:"-"`
+	ChildSeries    Series `gorm:"foreignKey:ChildSeriesID" json:"child_series"`
+	ParentSeriesID uint   `gorm:"not null" json:"-"`
+	ParentSeries   Series `gorm:"foreignKey:ParentSeriesID" json:"parent_series"`
 }

@@ -1,16 +1,14 @@
 package db
 
-import "gorm.io/gorm"
-
 type GameEngine struct {
-	gorm.Model
-	Name                 string
-	Slug                 string
-	Description          string
-	ProgrammingLanguages []string `gorm:"type:varchar[255]"`
-	LogoID               uint
-	Logo                 GameEngineLogo `gorm:"foreignKey:LogoID"`
-	Companies            []Company      `gorm:"many2many:game_engine_company;"`
-	Platforms            []Platform     `gorm:"many2many:game_engine_platform;"`
-	Game                 []*Game        `gorm:"many2many:game_game_engine;"`
+	Model
+	Name                 string         `gorm:"not null" json:"name"`
+	Slug                 string         `gorm:"not null" json:"slug"`
+	Description          string         `gorm:"type:text" json:"description"`
+	ProgrammingLanguages []string       `gorm:"type:varchar[255]" json:"programmingLanguages"`
+	LogoID               uint           `json:"-"`
+	Logo                 GameEngineLogo `gorm:"foreignKey:LogoID" json:"logo"`
+	Companies            []Company      `gorm:"many2many:game_engine_company;" json:"companies"`
+	Platforms            []Platform     `gorm:"many2many:game_engine_platform;" json:"platforms"`
+	Game                 []*Game        `gorm:"many2many:game_game_engine;" json:"games"`
 }

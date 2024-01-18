@@ -1,8 +1,6 @@
 package db
 
-import "gorm.io/gorm"
-
 type PlatformCategory struct {
-	gorm.Model
-	Name string `gorm:";not null;unique"`
+	Model
+	Name string `gorm:";not null;unique" json:"name"`
 }

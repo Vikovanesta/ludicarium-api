@@ -1,9 +1,7 @@
 package db
 
-import "gorm.io/gorm"
-
 type PlatformFamily struct {
-	gorm.Model
-	Name string
-	Slug string
+	Model
+	Name string `gorm:"not null" json:"name"`
+	Slug string `gorm:"not null" json:"slug"`
 }

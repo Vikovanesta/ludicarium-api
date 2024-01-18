@@ -1,10 +1,8 @@
 package db
 
-import "gorm.io/gorm"
-
 type Region struct {
-	gorm.Model
-	Name       string
-	Category   string
-	Identifier string
+	Model
+	Name       string `gorm:"not null" json:"name"`
+	Category   string `json:"category"` // local, continent
+	Identifier string `gorm:"unique, not null" json:"identifier"`
 }
